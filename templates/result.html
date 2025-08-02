@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> PDF Results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo1.png') }}">
+</head>
+<body>
+  <div class="card result-page">
+    <h2>✅ Extracted Results</h2>
+
+    <section>
+      <h3>📜 Full Text</h3>
+      <textarea readonly rows="16" class="output-box">{{ text }}</textarea>
+    </section>
+
+    <section>
+      <h3>🧠 Summary</h3>
+      <textarea readonly rows="6" class="output-box">{{ summary }}</textarea>
+    </section>
+
+    <section>
+      <h3>🔑 Keywords</h3>
+      <ul class="keyword-list">
+        {% for kw in keywords %}
+          <li>{{ kw }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <a class="back-button" href="/">⬅️ Back to Home</a>
+    
+  </div>
+</body>
+</html>
