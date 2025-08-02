@@ -1,7 +1,8 @@
-Flask==2.3.3
-gunicorn==21.2.0
-PyMuPDF==1.23.7
-pytesseract==0.3.10
-pdf2image==1.17.0
-sumy==0.10.0
-yake==0.4.8
+Flask
+gunicorn
+PyMuPDF==1.21.1
+pdf2image
+pytesseract
+sumy
+yake
+pillow
