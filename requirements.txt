@@ -1,10 +1,10 @@
 Flask
 gunicorn
-PyMuPDF==1.21.1
-pdf2image
-pytesseract
-sumy
-yake
-pillow
 pdfplumber
 nltk
+PyPDF2
+pdf2image
+pytesseract
+yake
+sumy
+fpdf
