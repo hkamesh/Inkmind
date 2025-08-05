@@ -8,6 +8,7 @@ from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
 import yake
+import pdfplumber
 import nltk
 nltk.download('punkt')
 
@@ -70,6 +71,18 @@ def index():
             return render_template("result.html", text=full_text, summary=summary, keywords=keywords)
 
     return render_template("index.html")
+
+def extract_text_from_pdf(pdf_path):
+    output_text = ""
+    try:
+        with pdfplumber.open(pdf_path) as pdf:
+            for i, page in enumerate(pdf.pages):
+                text = page.extract_text()
+                output_text += f"\n--- Page {i+1} ---\n{text.strip() if text else '⚠️ No text found'}\n"
+        return output_text.strip() if output_text.strip() else "⚠️ No content found."
+    except Exception as e:
+        return f"❌ Error extracting text: {str(e)}"
+
 
 if __name__ == "__main__":
     app.run(debug=True)
