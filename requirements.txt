@@ -6,3 +6,4 @@ pytesseract
 sumy
 yake
 pillow
+nltk
