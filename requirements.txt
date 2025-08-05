@@ -6,4 +6,5 @@ pytesseract
 sumy
 yake
 pillow
+pdfplumber
 nltk
