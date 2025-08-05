@@ -1,7 +1,7 @@
 Flask
 gunicorn
 pdfplumber
-nltk
+sumy
 PyPDF2
 pdf2image
 pytesseract
