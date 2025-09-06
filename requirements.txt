@@ -1,13 +1,10 @@
 Flask
 gunicorn
-pdfplumber
-sumy
 PyPDF2
-pdf2image
-pytesseract
-yake
-sumy
 fpdf
 python-docx
 nltk
 gensim
+yake
+sumy
+numpy
