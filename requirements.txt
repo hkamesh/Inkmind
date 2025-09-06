@@ -9,3 +9,5 @@ yake
 sumy
 fpdf
 python-docx
+nltk
+gensim
