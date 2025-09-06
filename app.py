@@ -10,7 +10,7 @@ import pdfplumber
 import nltk
 from fpdf import FPDF
 from docx import Document
-
+from nltk.tokenize import sent_tokenize
 nltk.download('punkt')
 
 app = Flask(__name__)
@@ -32,13 +32,17 @@ def extract_text_from_pdf(pdf_path):
     except Exception as e:
         return f"❌ Error extracting text: {e}"
 
-def summarize_text(text, sentences=3):
+
+
+def summarize_text(text, num_sentences=3):
     try:
-        parser = PlaintextParser.from_string(text, Tokenizer("english"))
-        summary = LexRankSummarizer()(parser.document, sentences)
-        return " ".join(str(s) for s in summary)
-    except:
-        return "⚠️ Summary generation failed."
+        sentences = sent_tokenize(text)
+        if len(sentences) <= num_sentences:
+            return " ".join(sentences)
+        return " ".join(sentences[:num_sentences])
+    except Exception as e:
+        return f"⚠️ Summary generation failed: {str(e)}"
+
 
 def extract_keywords(text, top_n=10):
     try:
