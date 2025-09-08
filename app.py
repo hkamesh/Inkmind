@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request
 import PyPDF2
 import os
@@ -6,18 +7,8 @@ from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
 import yake
-import nltk
-
-try:
-    nltk.data.find("tokenizers/punkt")
-except LookupError:
-    nltk.download("punkt")
 
 app = Flask(__name__)
-
-# ------------------------
-# Extract text from PDF
-# ------------------------
 def extract_text_from_pdf(pdf_path):
     text = ""
     try:
@@ -30,21 +21,15 @@ def extract_text_from_pdf(pdf_path):
     except Exception as e:
         return f"❌ Error extracting text: {str(e)}"
 
-# ------------------------
-# Summarize text (bullet points)
-# ------------------------
-def summarize_text(text, sentences=5):
+def summarize_text(text, sentences=3):
     try:
         parser = PlaintextParser.from_string(text, Tokenizer("english"))
         summarizer = LexRankSummarizer()
         summary = summarizer(parser.document, sentences)
-        return [str(s) for s in summary] if summary else ["⚠️ No summary generated."]
+        return " ".join(str(s) for s in summary) if summary else "⚠️ No summary generated."
     except Exception as e:
-        return [f"❌ Summary error: {str(e)}"]
+        return f"❌ Summary error: {str(e)}"
 
-# ------------------------
-# Extract keywords
-# ------------------------
 def extract_keywords(text, top_n=10):
     try:
         kw_extractor = yake.KeywordExtractor(n=1, top=top_n)
@@ -53,9 +38,6 @@ def extract_keywords(text, top_n=10):
     except Exception as e:
         return [f"❌ Keyword error: {str(e)}"]
 
-# ------------------------
-# Flask Routes
-# ------------------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -70,7 +52,7 @@ def index():
             summary = summarize_text(full_text)
             keywords = extract_keywords(full_text)
 
-            os.unlink(file_path)  # cleanup temp file
+            os.unlink(file_path)  
 
             return render_template("result.html", text=full_text, summary=summary, keywords=keywords)
 
