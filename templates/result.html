@@ -16,9 +16,14 @@
     </section>
 
     <section>
-      <h3>🧠 Summary</h3>
-      <textarea readonly rows="6" class="output-box">{{ summary }}</textarea>
-    </section>
+  <h3>🧠 Summary</h3>
+  <ul>
+    {% for point in summary.split('.') if point.strip() %}
+      <li>{{ point.strip() }}</li>
+    {% endfor %}
+  </ul>
+</section>
+
 
     <section>
       <h3>🔑 Keywords</h3>
