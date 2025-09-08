@@ -1,69 +1,63 @@
-from flask import Flask, render_template, request, send_file
-import tempfile, os
-import pytesseract
-from pdf2image import convert_from_path
+
+from flask import Flask, render_template, request
+import PyPDF2
+import os
+import tempfile
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
 import yake
-import pdfplumber
-import nltk
-from fpdf import FPDF
-from docx import Document
-from nltk.tokenize import sent_tokenize
-nltk.download('punkt')
 
 app = Flask(__name__)
-
 def extract_text_from_pdf(pdf_path):
-    output_text = ""
+    text = ""
     try:
-        with pdfplumber.open(pdf_path) as pdf:
-            for i, page in enumerate(pdf.pages, start=1):
-                txt = page.extract_text()
-                if txt and txt.strip():
-                    output_text += f"\n--- Page {i} ---\n{txt.strip()}\n"
-                else:
-                    # fallback to OCR
-                    images = convert_from_path(pdf_path, first_page=i, last_page=i)
-                    ocr = pytesseract.image_to_string(images[0], lang="eng")
-                    output_text += f"\n--- Page {i} (OCR) ---\n{ocr.strip()}\n"
-        return output_text.strip() or "⚠️ No content found."
+        with open(pdf_path, "rb") as f:
+            reader = PyPDF2.PdfReader(f)
+            for i, page in enumerate(reader.pages):
+                page_text = page.extract_text() or ""
+                text += f"\n--- Page {i+1} ---\n{page_text.strip()}\n"
+        return text.strip() if text.strip() else "⚠️ No readable text found in PDF."
     except Exception as e:
-        return f"❌ Error extracting text: {e}"
+        return f"❌ Error extracting text: {str(e)}"
 
-
-
-def summarize_text(text, num_sentences=3):
+def summarize_text(text, sentences=3):
     try:
-        sentences = sent_tokenize(text)
-        if len(sentences) <= num_sentences:
-            return " ".join(sentences)
-        return " ".join(sentences[:num_sentences])
+        parser = PlaintextParser.from_string(text, Tokenizer("english"))
+        summarizer = LexRankSummarizer()
+        summary = summarizer(parser.document, sentences)
+        return " ".join(str(s) for s in summary) if summary else "⚠️ No summary generated."
     except Exception as e:
-        return f"⚠️ Summary generation failed: {str(e)}"
-
+        return f"❌ Summary error: {str(e)}"
 
 def extract_keywords(text, top_n=10):
     try:
-        kw = yake.KeywordExtractor(n=1, top=top_n).extract_keywords(text)
-        return [w for w,_ in kw]
-    except:
-        return []
+        kw_extractor = yake.KeywordExtractor(n=1, top=top_n)
+        keywords = kw_extractor.extract_keywords(text)
+        return [kw[0] for kw in keywords] if keywords else ["⚠️ No keywords found."]
+    except Exception as e:
+        return [f"❌ Keyword error: {str(e)}"]
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        f = request.files.get("pdf_file")
-        if f:
+        uploaded_file = request.files["pdf_file"]
+
+        if uploaded_file.filename != "":
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-                f.save(tmp.name)
-                full = extract_text_from_pdf(tmp.name)
-                summary = summarize_text(full) if "summary" in request.form else "Not requested."
-                keywords = extract_keywords(full) if "keywords" in request.form else []
-            os.unlink(tmp.name)
-            return render_template("result.html", text=full, summary=summary, keywords=keywords)
+                file_path = tmp.name
+                uploaded_file.save(file_path)
+
+            full_text = extract_text_from_pdf(file_path)
+            summary = summarize_text(full_text)
+            keywords = extract_keywords(full_text)
+
+            os.unlink(file_path)  
+
+            return render_template("result.html", text=full_text, summary=summary, keywords=keywords)
+
     return render_template("index.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
