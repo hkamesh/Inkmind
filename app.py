@@ -4,9 +4,10 @@ import os
 import tempfile
 import re
 import yake
-from sumy.summarizers.lex_rank import LexRankSummarizer
-from sumy.models.dom._sentence import Sentence
-from sumy.models.dom._document import Document
+import math
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
@@ -26,26 +27,33 @@ def extract_text_from_pdf(pdf_path):
         return f"❌ Error extracting text: {str(e)}"
 
 # -------------------------------
-# Custom summarizer (no NLTK)
+# Simple sentence splitter
 # -------------------------------
 def split_sentences(text):
-    # Simple regex-based sentence splitter
     sentences = re.split(r'(?<=[.!?])\s+', text.strip())
     return [s for s in sentences if s]
 
+# -------------------------------
+# Custom LexRank-like summarizer
+# -------------------------------
 def summarize_text(text, sentences=3):
     try:
         sents = split_sentences(text)
         if not sents:
             return "⚠️ No summary generated."
+        if len(sents) <= sentences:
+            return " ".join(sents)
 
-        # Convert sentences to Sumy Document manually
-        sumy_sentences = [Sentence(s) for s in sents]
-        doc = Document(sumy_sentences)
+        # TF-IDF for sentence embeddings
+        vectorizer = TfidfVectorizer().fit_transform(sents)
+        sim_matrix = cosine_similarity(vectorizer)
 
-        summarizer = LexRankSummarizer()
-        summary = summarizer(doc, sentences)
-        return " ".join(str(s) for s in summary) if summary else "⚠️ No summary generated."
+        # Degree centrality (approx LexRank)
+        scores = sim_matrix.sum(axis=1)
+
+        ranked_sentences = [s for _, s in sorted(zip(scores, sents), reverse=True)]
+        summary = " ".join(ranked_sentences[:sentences])
+        return summary
     except Exception as e:
         return f"❌ Summary error: {str(e)}"
 
