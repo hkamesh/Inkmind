@@ -8,16 +8,16 @@ from sumy.summarizers.lex_rank import LexRankSummarizer
 import yake
 import nltk
 
-# Ensure NLTK data is available (safe check)
-for resource in ["punkt", "punkt_tab", "stopwords"]:
-    try:
-        nltk.data.find(f"tokenizers/{resource}")
-    except LookupError:
-        nltk.download(resource)
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt")
 
 app = Flask(__name__)
 
-# ------------------ PDF TEXT EXTRACTION ------------------
+# ------------------------
+# Extract text from PDF
+# ------------------------
 def extract_text_from_pdf(pdf_path):
     text = ""
     try:
@@ -30,20 +30,21 @@ def extract_text_from_pdf(pdf_path):
     except Exception as e:
         return f"❌ Error extracting text: {str(e)}"
 
-# ------------------ SUMMARIZATION ------------------
+# ------------------------
+# Summarize text (bullet points)
+# ------------------------
 def summarize_text(text, sentences=5):
     try:
         parser = PlaintextParser.from_string(text, Tokenizer("english"))
         summarizer = LexRankSummarizer()
         summary = summarizer(parser.document, sentences)
-
-        # Return bullet point sentences
-        summary_sentences = [str(s).strip() for s in summary if str(s).strip()]
-        return summary_sentences if summary_sentences else ["⚠️ No summary generated."]
+        return [str(s) for s in summary] if summary else ["⚠️ No summary generated."]
     except Exception as e:
         return [f"❌ Summary error: {str(e)}"]
 
-# ------------------ KEYWORDS ------------------
+# ------------------------
+# Extract keywords
+# ------------------------
 def extract_keywords(text, top_n=10):
     try:
         kw_extractor = yake.KeywordExtractor(n=1, top=top_n)
@@ -52,7 +53,9 @@ def extract_keywords(text, top_n=10):
     except Exception as e:
         return [f"❌ Keyword error: {str(e)}"]
 
-# ------------------ ROUTES ------------------
+# ------------------------
+# Flask Routes
+# ------------------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -67,11 +70,12 @@ def index():
             summary = summarize_text(full_text)
             keywords = extract_keywords(full_text)
 
-            os.unlink(file_path)  
+            os.unlink(file_path)  # cleanup temp file
 
             return render_template("result.html", text=full_text, summary=summary, keywords=keywords)
 
     return render_template("index.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
