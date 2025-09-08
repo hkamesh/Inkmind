@@ -1,14 +1,18 @@
-
 from flask import Flask, render_template, request
 import PyPDF2
 import os
 import tempfile
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lex_rank import LexRankSummarizer
+import re
 import yake
+from sumy.summarizers.lex_rank import LexRankSummarizer
+from sumy.models.dom._sentence import Sentence
+from sumy.models.dom._document import Document
 
 app = Flask(__name__)
+
+# -------------------------------
+# PDF text extraction
+# -------------------------------
 def extract_text_from_pdf(pdf_path):
     text = ""
     try:
@@ -21,15 +25,33 @@ def extract_text_from_pdf(pdf_path):
     except Exception as e:
         return f"❌ Error extracting text: {str(e)}"
 
+# -------------------------------
+# Custom summarizer (no NLTK)
+# -------------------------------
+def split_sentences(text):
+    # Simple regex-based sentence splitter
+    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+    return [s for s in sentences if s]
+
 def summarize_text(text, sentences=3):
     try:
-        parser = PlaintextParser.from_string(text, Tokenizer("english"))
+        sents = split_sentences(text)
+        if not sents:
+            return "⚠️ No summary generated."
+
+        # Convert sentences to Sumy Document manually
+        sumy_sentences = [Sentence(s) for s in sents]
+        doc = Document(sumy_sentences)
+
         summarizer = LexRankSummarizer()
-        summary = summarizer(parser.document, sentences)
+        summary = summarizer(doc, sentences)
         return " ".join(str(s) for s in summary) if summary else "⚠️ No summary generated."
     except Exception as e:
         return f"❌ Summary error: {str(e)}"
 
+# -------------------------------
+# Keyword extraction with YAKE
+# -------------------------------
 def extract_keywords(text, top_n=10):
     try:
         kw_extractor = yake.KeywordExtractor(n=1, top=top_n)
@@ -38,6 +60,9 @@ def extract_keywords(text, top_n=10):
     except Exception as e:
         return [f"❌ Keyword error: {str(e)}"]
 
+# -------------------------------
+# Flask routes
+# -------------------------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -52,12 +77,11 @@ def index():
             summary = summarize_text(full_text)
             keywords = extract_keywords(full_text)
 
-            os.unlink(file_path)  
+            os.unlink(file_path)  # remove temp file
 
             return render_template("result.html", text=full_text, summary=summary, keywords=keywords)
 
     return render_template("index.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True)
