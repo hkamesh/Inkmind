@@ -1,10 +1,11 @@
 Flask
 gunicorn
-PyPDF2
+pdfplumber
+pdf2image
+pytesseract
+nltk
+sumy
+yake
 fpdf
 python-docx
-nltk
-gensim
-yake
-sumy
-numpy
+PyPDF2
