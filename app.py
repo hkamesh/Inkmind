@@ -4,10 +4,7 @@ import os
 import tempfile
 import re
 import yake
-import math
-import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from collections import Counter
 
 app = Flask(__name__)
 
@@ -34,7 +31,7 @@ def split_sentences(text):
     return [s for s in sentences if s]
 
 # -------------------------------
-# Custom LexRank-like summarizer
+# Lightweight frequency-based summarizer
 # -------------------------------
 def summarize_text(text, sentences=3):
     try:
@@ -44,16 +41,16 @@ def summarize_text(text, sentences=3):
         if len(sents) <= sentences:
             return " ".join(sents)
 
-        # TF-IDF for sentence embeddings
-        vectorizer = TfidfVectorizer().fit_transform(sents)
-        sim_matrix = cosine_similarity(vectorizer)
+        # Build word frequency table
+        words = re.findall(r'\w+', text.lower())
+        freq = Counter(words)
 
-        # Degree centrality (approx LexRank)
-        scores = sim_matrix.sum(axis=1)
+        # Score sentences by word frequency
+        scores = {s: sum(freq[w] for w in re.findall(r'\w+', s.lower())) for s in sents}
 
-        ranked_sentences = [s for _, s in sorted(zip(scores, sents), reverse=True)]
-        summary = " ".join(ranked_sentences[:sentences])
-        return summary
+        # Pick top N sentences
+        ranked = sorted(scores, key=scores.get, reverse=True)[:sentences]
+        return " ".join(ranked)
     except Exception as e:
         return f"❌ Summary error: {str(e)}"
 
