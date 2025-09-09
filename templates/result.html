@@ -8,15 +8,15 @@
 </head>
 <body>
   <div class="card result-page">
-    <h2>✅ Extracted Results</h2>
+    <h2>Extracted Results</h2>
 
     <section>
-      <h3>📜 Full Text</h3>
+      <h3> Full Text</h3>
       <textarea readonly rows="16" class="output-box">{{ text }}</textarea>
     </section>
 
     <section>
-  <h3>🧠 Summary</h3>
+  <h3> Summary</h3>
   <ul>
     {% for point in summary.split('.') if point.strip() %}
       <li>{{ point.strip() }}</li>
