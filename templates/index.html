@@ -9,19 +9,31 @@
   <style>
     /* === BACKGROUND === */
     body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", system-ui, sans-serif;
-      background: linear-gradient(135deg, #0f1117, #1a1c22, #10131a, #16181f);
-      background-size: 300% 300%;
-      animation: gradientShift 15s ease infinite;
-      color: #f1f1f1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-    }
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+
+  /* === PROFESSIONAL BACKGROUND === */
+  background: radial-gradient(circle at 20% 30%, rgba(79, 70, 229, 0.15), transparent 60%),
+              radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.15), transparent 60%),
+              linear-gradient(135deg, #0f1117, #16181f, #1a1c22, #10131a);
+  background-size: 300% 300%;
+  animation: gradientShift 18s ease infinite;
+}
+
+/* === GRADIENT ANIMATION === */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
