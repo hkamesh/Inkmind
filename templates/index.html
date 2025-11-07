@@ -7,148 +7,168 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    /* Background gradient animation */
+    /* === BACKGROUND === */
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(-45deg, #0f1117, #1a1c22, #10131a, #16181f);
-      background-size: 400% 400%;
-      animation: gradientMove 15s ease infinite;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f1117, #1a1c22, #10131a, #16181f);
+      background-size: 300% 300%;
+      animation: gradientShift 15s ease infinite;
       color: #f1f1f1;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden;
     }
 
-    @keyframes gradientMove {
+    @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* Card container */
+    /* === UPLOAD CARD === */
     .upload-card {
-      background-color: rgba(28, 31, 38, 0.9);
-      padding: 40px 30px;
-      border-radius: 18px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      background: rgba(28, 31, 38, 0.92);
+      backdrop-filter: blur(14px);
+      border-radius: 20px;
+      box-shadow: 0 8px 35px rgba(0, 0, 0, 0.45);
+      padding: 48px 40px;
       width: 90%;
-      max-width: 480px;
+      max-width: 460px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      backdrop-filter: blur(12px);
     }
 
     .upload-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 10px 35px rgba(100, 200, 255, 0.15);
+      box-shadow: 0 10px 40px rgba(100, 200, 255, 0.15);
     }
 
-    /* Logo and title */
+    /* === LOGO & HEADER === */
     .logo {
       height: 65px;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      color: #60a5fa;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0;
       margin-bottom: 8px;
     }
 
     .tagline {
       color: #b8c0d1;
-      font-size: 14px;
-      font-style: italic;
-      margin-top: -6px;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      margin-bottom: 18px;
-      font-size: 26px;
-      color: #60a5fa;
-      letter-spacing: 0.5px;
-    }
-
-    /* File input styling */
-    input[type="file"] {
-      width: 100%;
-      margin: 12px 0 18px 0;
-      padding: 14px;
-      background-color: #2e323a;
-      border: 1px solid #444;
-      border-radius: 10px;
-      color: #ddd;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-
-    input[type="file"]:hover {
-      border-color: #60a5fa;
-    }
-
-    /* Checkbox group */
-    .checkbox-group {
-      text-align: left;
-      margin: 20px 0;
-      padding: 12px;
-      background-color: #2b2d33;
-      border-radius: 10px;
-    }
-
-    .checkbox-group label {
-      display: flex;
-      align-items: center;
-      margin: 10px 0;
-      color: #f3f3f3;
       font-size: 15px;
-    }
-
-    .checkbox-group input {
-      margin-right: 8px;
-      transform: scale(1.2);
-      accent-color: #4f46e5;
-    }
-
-    /* Button styling */
-    button {
-      background: linear-gradient(135deg, #4f46e5, #3b82f6);
-      color: white;
-      font-weight: bold;
-      padding: 12px 28px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s;
-      width: 100%;
-    }
-
-    button:hover {
-      background: linear-gradient(135deg, #4338ca, #2563eb);
-      transform: translateY(-2px);
+      font-style: italic;
+      margin-bottom: 22px;
+      text-align: center;
+      line-height: 1.4;
     }
 
     .instruction {
       color: #cbd5e1;
       font-size: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       text-align: center;
+      line-height: 1.5;
     }
 
-    /* Responsive tweaks */
+    /* === INPUT FIELD === */
+    input[type="file"] {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 22px;
+      border: 1px solid #3a3f47;
+      border-radius: 10px;
+      background-color: #2c2f36;
+      color: #e4e4e4;
+      cursor: pointer;
+      font-size: 15px;
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    input[type="file"]:hover {
+      border-color: #60a5fa;
+      background-color: #34383f;
+    }
+
+    /* === CHECKBOX GROUP === */
+    .checkbox-group {
+      width: 100%;
+      background-color: #252830;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .checkbox-group label {
+      color: #f3f3f3;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type="checkbox"] {
+      accent-color: #4f46e5;
+      transform: scale(1.2);
+    }
+
+    /* === BUTTON === */
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #4f46e5, #3b82f6);
+      color: white;
+      font-weight: 600;
+      padding: 14px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #4338ca, #2563eb);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(59, 130, 246, 0.3);
+    }
+
+    /* === RESPONSIVE === */
     @media (max-width: 600px) {
       .upload-card {
-        padding: 30px 20px;
+        padding: 36px 24px;
+        border-radius: 16px;
       }
 
       h2 {
-        font-size: 22px;
+        font-size: 24px;
       }
 
-      .checkbox-group label {
+      .tagline, .instruction {
         font-size: 14px;
       }
 
-      .instruction {
+      input[type="file"] {
         font-size: 14px;
+      }
+
+      button {
+        font-size: 15px;
       }
     }
   </style>
@@ -159,7 +179,7 @@
     <img src="{{ url_for('static', filename='logo.png') }}" alt="Inkmind Logo" class="logo">
     <h2>Inkmind</h2>
     <p class="tagline">Smart PDF Text, Summary & Keyword Extractor</p>
-    <p class="instruction">Upload a PDF file to extract its content, summary, and keywords.</p>
+    <p class="instruction">Upload a PDF file below to extract its content, summary, and keywords.</p>
 
     <form method="POST" enctype="multipart/form-data">
       <input type="file" name="pdf_file" accept=".pdf" required>
