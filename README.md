@@ -17,7 +17,7 @@ Inkmind is a smart, student-friendly tool that extracts text from any PDF, summa
 
 ## 🚀 Live 
 
-> Coming Soon... [Link will go here after deployment]
+inkmind.onrender.com
 
 ---
 
