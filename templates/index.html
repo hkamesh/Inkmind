@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    /* === BACKGROUND === */
     body {
   margin: 0;
   padding: 0;
@@ -18,30 +17,22 @@
   align-items: center;
   height: 100vh;
   overflow: hidden;
-
-  /* === PROFESSIONAL BACKGROUND === */
   background: radial-gradient(circle at 20% 30%, rgba(79, 70, 229, 0.15), transparent 60%),
               radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.15), transparent 60%),
               linear-gradient(135deg, #0f1117, #16181f, #1a1c22, #10131a);
   background-size: 300% 300%;
   animation: gradientShift 18s ease infinite;
 }
-
-/* === GRADIENT ANIMATION === */
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
-
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
-    /* === UPLOAD CARD === */
     .upload-card {
       background: rgba(28, 31, 38, 0.92);
       backdrop-filter: blur(14px);
@@ -57,18 +48,14 @@
       justify-content: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .upload-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 10px 40px rgba(100, 200, 255, 0.15);
     }
-
-    /* === LOGO & HEADER === */
     .logo {
       height: 65px;
       margin-bottom: 14px;
     }
-
     h2 {
       color: #60a5fa;
       font-size: 28px;
@@ -76,7 +63,6 @@
       margin: 0;
       margin-bottom: 8px;
     }
-
     .tagline {
       color: #b8c0d1;
       font-size: 15px;
@@ -93,8 +79,6 @@
       text-align: center;
       line-height: 1.5;
     }
-
-    /* === INPUT FIELD === */
     input[type="file"] {
       width: 100%;
       padding: 14px;
@@ -112,8 +96,6 @@
       border-color: #60a5fa;
       background-color: #34383f;
     }
-
-    /* === CHECKBOX GROUP === */
     .checkbox-group {
       width: 100%;
       background-color: #252830;
@@ -125,7 +107,6 @@
       align-items: flex-start;
       gap: 10px;
     }
-
     .checkbox-group label {
       color: #f3f3f3;
       font-size: 15px;
@@ -133,13 +114,10 @@
       align-items: center;
       gap: 8px;
     }
-
     input[type="checkbox"] {
       accent-color: #4f46e5;
       transform: scale(1.2);
     }
-
-    /* === BUTTON === */
     button {
       width: 100%;
       background: linear-gradient(135deg, #4f46e5, #3b82f6);
@@ -159,8 +137,6 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 18px rgba(59, 130, 246, 0.3);
     }
-
-    /* === RESPONSIVE === */
     @media (max-width: 600px) {
       .upload-card {
         padding: 36px 24px;
